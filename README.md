@@ -28,7 +28,9 @@ On my eventually TODO list is:
 
 -Allow Insteon devices to be responders as well (So that for example, pressing a button on a 6 button scene controller can 
  light/unlight other buttons
+
 -Add a mode for insteon on/off switches for dimming (i.e. an insteon microswitch on a lamp, with each subsequent press of the
  lamp switch it will start from dim->less dim->full on->off, with an optional timer so that if you set a specific dimness level,
  and then wait 5 minutes, and press the button again it turns off instead of getting brighter.)
+
 -Fix the dimmer. It doesn't work well.
