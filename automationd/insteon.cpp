@@ -107,6 +107,7 @@ void Insteon::set_level(const std::string& name, int level, const std::string& a
 }
 
 bool Insteon::buffer(unsigned char** recv_data, size_t& recv_size, size_t expected) {
+  if (!recv_data || (recv_size && !*recv_data)) return false;
   for (size_t i = 0; i < recv_size; i++) {
     buffer_.push_back((*recv_data)[i]);
   }
@@ -174,6 +175,8 @@ void Insteon::run() {
           delete[] last_command_data_;
           last_command_data_ = 0;
           delete[] recv_data;
+		  recv_data = 0;
+		  recv_size = 0;
           continue;
         } else {
           std::cerr << "Insteon: (Waiting for response) Got different data, passing to message parsing" << std::endl;
@@ -185,6 +188,8 @@ void Insteon::run() {
           gettimeofday(&tv, NULL);
           std::cerr << std::fixed << std::setprecision(1) << ((double)(tv.tv_sec * 1000) + ((double)tv.tv_usec/1000)) << ": Insteon: (Waiting for message) Got NAK, flushing buffer" << std::endl;
           delete[] recv_data;
+		  recv_data = 0;
+		  recv_size = 0;
           buffer_.clear();
           continue;
         }
@@ -310,6 +315,8 @@ void Insteon::run() {
           } else {
             std::cerr << "Insteon: Message from unknown device, discarding." << std::endl;
 			delete[] recv_data;
+			recv_data = 0;
+			recv_size = 0;
 			cur_message_[0] = 0x00;
 			cur_message_[1] = 0x00;
           }
@@ -403,6 +410,8 @@ void Insteon::run() {
         buffer_.push_front(cur_message_[1]);
       }
       delete[] recv_data;
+	  recv_data = 0;
+	  recv_size = 0;
     }
     if (!last_command_data_ && !wait_) {
       if (need_delay && delay_ > 0) {
